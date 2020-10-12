@@ -1,0 +1,8 @@
+secretGenerator:
+- name: mysql-pass
+  literals:
+  - password=admin
+resources:
+- metallb-configmap.yaml
+- nginx-service.yaml
+- nginx-deployment.yaml

@@ -10,12 +10,12 @@ RUN apk update \
 	&& apk add openrc --no-cache \
 	&& mkdir /run/nginx \
 	&& touch /run/nginx/nginx.pid \
-	&& rm /etc/nginx/nginx.conf
+	&& rm /etc/nginx/conf.d/default.conf
 
-EXPOSE 80:80
-EXPOSE 443:443
+EXPOSE 80
+EXPOSE 443
 
-ADD ./srcs/nginx.conf /etc/nginx
+ADD ./srcs/nginx.conf /etc/nginx/conf.d/
+COPY ./srcs/init.sh .
 
-CMD nginx \
-	&& exec /bin/sh -c "trap : TERM INT; (while true; do sleep 1000; done) & wait"
+CMD sh init.sh
