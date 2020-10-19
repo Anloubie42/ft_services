@@ -6,3 +6,4 @@ resources:
 - metallb-configmap.yaml
 - nginx-service.yaml
 - nginx-deployment.yaml
+- wordpress-deployment.yaml

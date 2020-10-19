@@ -8,10 +8,11 @@ no_mode_selected()
 start_mode_selected()
 {
 	echo "\033[31mVirtual Machine Starting\033[0m"
+	sudo service docker start
 	minikube start --driver=docker > /dev/null
 	minikube addons enable metallb > /dev/null
 	build
-	kubectl apply -k srcs/kustomisation
+	kubectl apply -k srcs/kustomization
 	minikube dashboard & > /dev/null
 	# minikube config set vm-driver virtualbox
 	# minikube start
@@ -19,6 +20,7 @@ start_mode_selected()
 
 stop_mode_selected()
 {
+	sudo service docker stop
 	echo "\033[31mStopping Virtual Machine...\033[0m"
 	minikube stop
 	echo "\033[31mDeleting Virtual Machine...\033[0m"
@@ -31,13 +33,28 @@ delete()
 	if [ "$1" = "nginx" ]
 	then
 		kubectl delete -f ./srcs/kustomization/nginx-deployment.yaml > /dev/null
+	elif [ "$1" = "wordpress" ]
+	then
+		kubectl delete -f ./srcs/kustomization/wordpress-deployment.yaml
+	else
+		echo "\033[31mNo service selected\033[0m"
 	fi
 }
 
 build()
 {
 	eval $(minikube docker-env) > /dev/null
-	docker build -t docker-nginx ./srcs/nginx > /dev/null
+	if [ -z "$1" ]
+	then
+		docker build -t docker-nginx ./srcs/nginx > /dev/null
+		docker build -t docker-wordpress ./srcs/wordpress > /dev/null
+	elif [ "$1" = "nginx" ]
+	then
+		docker build -t docker-nginx ./srcs/nginx > /dev/null
+	elif [ "$1" = "wordpress" ]
+	then
+		docker build -t docker-wordpress ./srcs/wordpress
+	fi
 }
 
 update()
