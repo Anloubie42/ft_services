@@ -7,3 +7,4 @@ resources:
 - nginx-service.yaml
 - nginx-deployment.yaml
 - wordpress-deployment.yaml
+- mysql.yaml

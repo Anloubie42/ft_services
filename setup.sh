@@ -36,6 +36,9 @@ delete()
 	elif [ "$1" = "wordpress" ]
 	then
 		kubectl delete -f ./srcs/kustomization/wordpress-deployment.yaml
+	elif [ "$1" = "mysql" ]
+	then
+		kubectl delete -f ./srcs/kustomization/mysql.yaml
 	else
 		echo "\033[31mNo service selected\033[0m"
 	fi
@@ -48,6 +51,7 @@ build()
 	then
 		docker build -t docker-nginx ./srcs/nginx > /dev/null
 		docker build -t docker-wordpress ./srcs/wordpress > /dev/null
+		docker build -t docker-mysql ./srcs/mysql > /dev/null
 	elif [ "$1" = "nginx" ]
 	then
 		docker build -t docker-nginx ./srcs/nginx > /dev/null
@@ -60,7 +64,7 @@ build()
 update()
 {
 	delete $2
-	build
+	build $2
 	kubectl apply -k srcs/kustomization
 }
 
