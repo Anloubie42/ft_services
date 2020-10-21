@@ -8,8 +8,9 @@ no_mode_selected()
 start_mode_selected()
 {
 	echo "\033[31mVirtual Machine Starting\033[0m"
-	sudo service docker start
-	minikube start --driver=docker > /dev/null
+	# sudo service docker start
+	# minikube start --driver=docker > /dev/null
+	minikube start --driver=virtualbox > /dev/null
 	minikube addons enable metallb > /dev/null
 	build
 	kubectl apply -k srcs/kustomization
@@ -20,7 +21,7 @@ start_mode_selected()
 
 stop_mode_selected()
 {
-	sudo service docker stop
+	# sudo service docker stop
 	echo "\033[31mStopping Virtual Machine...\033[0m"
 	minikube stop
 	echo "\033[31mDeleting Virtual Machine...\033[0m"
@@ -58,6 +59,9 @@ build()
 	elif [ "$1" = "wordpress" ]
 	then
 		docker build -t docker-wordpress ./srcs/wordpress
+	elif [ "$1" = "mysql" ]
+	then
+		docker build -t docker-mysql ./srcs/MySQL
 	fi
 }
 
