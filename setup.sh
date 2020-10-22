@@ -9,12 +9,12 @@ start_mode_selected()
 {
 	echo "\033[31mVirtual Machine Starting\033[0m"
 	# sudo service docker start
-	# minikube start --driver=docker > /dev/null
-	minikube start --driver=virtualbox > /dev/null
-	minikube addons enable metallb > /dev/null
+	# minikube start --driver=docker
+	minikube start --driver=virtualbox
+	minikube addons enable metallb
 	build
 	kubectl apply -k srcs/kustomization
-	minikube dashboard & > /dev/null
+	minikube dashboard &
 	# minikube config set vm-driver virtualbox
 	# minikube start
 }
@@ -33,13 +33,16 @@ delete()
 {
 	if [ "$1" = "nginx" ]
 	then
-		kubectl delete -f ./srcs/kustomization/nginx-deployment.yaml > /dev/null
+		kubectl delete -f ./srcs/kustomization/nginx-deployment.yaml
 	elif [ "$1" = "wordpress" ]
 	then
 		kubectl delete -f ./srcs/kustomization/wordpress-deployment.yaml
 	elif [ "$1" = "mysql" ]
 	then
 		kubectl delete -f ./srcs/kustomization/mysql.yaml
+	elif [ "$1" = "phpmyadmin" ]
+	then
+		kubectl delete -f ./srcs/kustomization/phpmyadmin.yaml
 	else
 		echo "\033[31mNo service selected\033[0m"
 	fi
@@ -47,21 +50,25 @@ delete()
 
 build()
 {
-	eval $(minikube docker-env) > /dev/null
+	eval $(minikube docker-env)
 	if [ -z "$1" ]
 	then
-		docker build -t docker-nginx ./srcs/nginx > /dev/null
-		docker build -t docker-wordpress ./srcs/wordpress > /dev/null
-		docker build -t docker-mysql ./srcs/mysql > /dev/null
+		docker build -t docker-nginx ./srcs/nginx
+		docker build -t docker-mysql ./srcs/MySQL
+		docker build -t docker-wordpress ./srcs/wordpress
+		docker build -t docker-phpmyadmin ./srcs/PhpMyAdmin
 	elif [ "$1" = "nginx" ]
 	then
-		docker build -t docker-nginx ./srcs/nginx > /dev/null
+		docker build -t docker-nginx ./srcs/nginx
 	elif [ "$1" = "wordpress" ]
 	then
 		docker build -t docker-wordpress ./srcs/wordpress
 	elif [ "$1" = "mysql" ]
 	then
 		docker build -t docker-mysql ./srcs/MySQL
+	elif [ "$1" = "phpmyadmin" ]
+	then
+		docker build -t docker-phpmyadmin ./srcs/PhpMyAdmin
 	fi
 }
 
@@ -83,13 +90,13 @@ elif [ "$1" = "services" ]
 then
 	echo "Working on this part"
 	# echo "\033[31mDeleting all configuration...\033[0m"
-	# kubectl delete all --all > /dev/null
+	# kubectl delete all --all
 	# echo "\033[31mBuilding New Image...\033[0m"
-	# docker build -t docker-nginx ./srcs/nginx > /dev/null
+	# docker build -t docker-nginx ./srcs/nginx
 	# echo "\033[31mCreating Services And Deployments...\033[0m"
-	# kubectl apply -f srcs/nginx-service/nginx-service.yaml > /dev/null
-	# kubectl apply -f srcs/nginx/srcs/nginx-deployment.yaml > /dev/null
-	# kubectl apply -f srcs/ingress-test/ingress-service.yaml > /dev/null
+	# kubectl apply -f srcs/nginx-service/nginx-service.yaml
+	# kubectl apply -f srcs/nginx/srcs/nginx-deployment.yaml
+	# kubectl apply -f srcs/ingress-test/ingress-service.yaml
 elif [ "$1" = "stop" ]
 then
 	stop_mode_selected

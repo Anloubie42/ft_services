@@ -8,3 +8,4 @@ resources:
 - nginx-deployment.yaml
 - wordpress-deployment.yaml
 - mysql.yaml
+- phpmyadmin.yaml
