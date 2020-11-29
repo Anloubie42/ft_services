@@ -10,12 +10,12 @@ start_mode_selected()
 	echo "\033[31mVirtual Machine Starting\033[0m"
 	# sudo service docker start
 	# minikube start --driver=docker
-	minikube start --driver=virtualbox
+	minikube config set vm-driver virtualbox
+	minikube start --driver=virtualbox --extra-config kubeadm.ignore-preflight-errors=SystemVerification
 	minikube addons enable metallb
 	build
 	kubectl apply -k srcs/kustomization
 	minikube dashboard &
-	# minikube config set vm-driver virtualbox
 	# minikube start
 }
 
@@ -43,20 +43,23 @@ delete()
 	elif [ "$1" = "phpmyadmin" ]
 	then
 		kubectl delete -f ./srcs/kustomization/phpmyadmin.yaml
-	else
-		echo "\033[31mNo service selected\033[0m"
+	elif [ "$1" = "ftps" ]
+	then
+		kubectl delete -f ./srcs/kustomization/ftps.yaml
 	fi
 }
 
 build()
 {
-	eval $(minikube docker-env)
+	# eval $(minikube docker-env)
+	eval $(minikube -p minikube docker-env)
 	if [ -z "$1" ]
 	then
 		docker build -t docker-nginx ./srcs/nginx
 		docker build -t docker-mysql ./srcs/MySQL
 		docker build -t docker-wordpress ./srcs/wordpress
 		docker build -t docker-phpmyadmin ./srcs/PhpMyAdmin
+		docker build -t docker-ftps ./srcs/FTPS	
 	elif [ "$1" = "nginx" ]
 	then
 		docker build -t docker-nginx ./srcs/nginx
@@ -69,6 +72,9 @@ build()
 	elif [ "$1" = "phpmyadmin" ]
 	then
 		docker build -t docker-phpmyadmin ./srcs/PhpMyAdmin
+	elif [ "$1" = "ftps" ]
+	then
+		docker build -t docker-ftps ./srcs/FTPS
 	fi
 }
 

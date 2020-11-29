@@ -1,10 +1,17 @@
+mysql -h mysql --user=wproot --password=wppassword
+while [ $? != 0 ]; do
+	mysql -h mysql --user=wproot --password=wppassword
+	sleep 2
+done
+mysql -h mysql --user=wproot --password=wppassword -se'USE wordpress;'
+while [ $? != 0 ]; do
+	mysql --host=mysql --user=wproot --password=wppassword -se'CREATE DATABASE IF NOT EXISTS wordpress;'
+	mysql --host=mysql --user=wproot --password=wppassword wordpress < /wordpress.sql
+	mysql --host=mysql --user=wproot --password=wppassword -se'USE wordpress;'
+done
+echo "ok"
 php-fpm7
 nginx
-mysql --host=mysql --user=wproot --password=wppassword < admin.sql
-while [ $?==1 ]; do
-	mysql --host=mysql --user=wproot --password=wppassword < admin.sql
-	sleep 1
-done
 while pgrep nginx > /dev/null; do
 	sleep 1;
 done

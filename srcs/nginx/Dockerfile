@@ -22,5 +22,6 @@ EXPOSE 443
 ADD ./srcs/nginx.conf /etc/nginx/conf.d/
 ADD ./srcs/index.html /var/www/html/
 COPY ./srcs/init.sh .
+COPY ./srcs/proxy_params /etc/nginx/
 
 CMD sh init.sh
