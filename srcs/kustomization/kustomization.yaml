@@ -10,3 +10,6 @@ resources:
 - wordpress-deployment.yaml
 - phpmyadmin.yaml
 - ftps.yaml
+- grafana.yaml
+- influxdb.yaml
+- telegraf.yaml

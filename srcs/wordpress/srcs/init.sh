@@ -9,7 +9,6 @@ while [ $? != 0 ]; do
 	mysql --host=mysql --user=wproot --password=wppassword wordpress < /wordpress.sql
 	mysql --host=mysql --user=wproot --password=wppassword -se'USE wordpress;'
 done
-echo "ok"
 php-fpm7
 nginx
 while pgrep nginx > /dev/null; do

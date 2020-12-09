@@ -46,6 +46,15 @@ delete()
 	elif [ "$1" = "ftps" ]
 	then
 		kubectl delete -f ./srcs/kustomization/ftps.yaml
+	elif [ "$1" = "grafana" ]
+	then
+		kubectl delete -f ./srcs/kustomization/grafana.yaml
+	elif [ "$1" = "influxdb" ]
+	then
+		kubectl delete -f ./srcs/kustomization/influxdb.yaml
+	elif [ "$1" = "telegraf" ]
+	then
+		kubectl delete -f ./srcs/kustomization/telegraf.yaml
 	fi
 }
 
@@ -59,7 +68,10 @@ build()
 		docker build -t docker-mysql ./srcs/MySQL
 		docker build -t docker-wordpress ./srcs/wordpress
 		docker build -t docker-phpmyadmin ./srcs/PhpMyAdmin
-		docker build -t docker-ftps ./srcs/FTPS	
+		docker build -t docker-ftps ./srcs/FTPS
+		docker build -t docker-grafana ./srcs/grafana
+		docker build -t docker-influxdb ./srcs/influxdb
+		docker build -t docker-telegraf ./srcs/telegraf
 	elif [ "$1" = "nginx" ]
 	then
 		docker build -t docker-nginx ./srcs/nginx
@@ -75,6 +87,15 @@ build()
 	elif [ "$1" = "ftps" ]
 	then
 		docker build -t docker-ftps ./srcs/FTPS
+	elif [ "$1" = "grafana" ]
+	then
+		docker build -t docker-grafana ./srcs/grafana
+	elif [ "$1" = "influxdb" ]
+	then
+		docker build -t docker-influxdb ./srcs/influxdb
+	elif [ "$1" = "telegraf" ]
+	then
+		docker build -t docker-telegraf ./srcs/telegraf
 	fi
 }
 
