@@ -10,11 +10,13 @@ start_mode_selected()
 	echo "\033[31mVirtual Machine Starting\033[0m"
 	# sudo service docker start
 	# minikube start --driver=docker
-	minikube config set vm-driver virtualbox
-	minikube start --driver=virtualbox --extra-config kubeadm.ignore-preflight-errors=SystemVerification
+	# minikube start --driver=virtualbox --extra-config kubeadm.ignore-preflight-errors=SystemVerification
+	minikube config set WantUpdateNotification false
+	minikube start
 	minikube addons enable metallb
 	build
 	kubectl apply -k srcs/kustomization
+	kubectl apply -f srcs/kustomization/rbac.yaml
 	minikube dashboard &
 	# minikube start
 }
@@ -60,8 +62,8 @@ delete()
 
 build()
 {
-	# eval $(minikube docker-env)
-	eval $(minikube -p minikube docker-env)
+	eval $(minikube docker-env)
+	# eval $(minikube -p minikube docker-env)
 	if [ -z "$1" ]
 	then
 		docker build -t docker-nginx ./srcs/nginx
@@ -129,7 +131,6 @@ then
 	stop_mode_selected
 elif [ "$1" = "restart" ]
 then
-
 	stop_mode_selected
 	start_mode_selected
 elif [ "$1" = "update" ]
