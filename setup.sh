@@ -14,6 +14,7 @@ start_mode_selected()
 	minikube config set WantUpdateNotification false
 	minikube start
 	minikube addons enable metallb
+	minikube addons enable metrics-server
 	build
 	kubectl apply -k srcs/kustomization
 	kubectl apply -f srcs/kustomization/rbac.yaml

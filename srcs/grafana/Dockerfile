@@ -14,6 +14,6 @@ RUN mv grafana-7.3.6 grafana && \
 	mv grafana /usr/share/webapps
 
 COPY ./srcs/init.sh .
-# COPY ./srcs/grafana.db /usr/share/webapps/grafana/data/
+COPY ./srcs/grafana.db /usr/share/webapps/grafana/data/
 
 ENTRYPOINT ["sh", "/init.sh"]
