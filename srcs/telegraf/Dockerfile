@@ -14,8 +14,6 @@ RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.1_linux_i386.
 RUN touch /var/run/utmp
 
 COPY ./srcs/init.sh /
-COPY ./srcs/telegraf.conf /etc/
-
-EXPOSE 35000
+COPY ./srcs/telegraf_ip.conf /etc/telegraf.conf
 
 CMD sh init.sh

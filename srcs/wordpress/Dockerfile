@@ -15,8 +15,6 @@ RUN apk update && \
 	ln -s /var/www/html/wordpress/ /var/www/localhost/htdocs/wordpress && \
 	mkdir -p /var/run/php
 
-EXPOSE 5050
-
 ADD ./srcs/nginx.conf /etc/nginx/conf.d/
 COPY ./srcs/init.sh /
 COPY ./srcs/wp-config.php /var/www/html/wordpress/

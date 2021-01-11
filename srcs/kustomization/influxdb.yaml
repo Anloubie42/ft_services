@@ -16,9 +16,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: influxdb-pv-claim
+  name: influxdb-pvc
   labels:
-    app: grafana
+    app: influxdb
 spec:
   accessModes:
     - ReadWriteOnce
@@ -37,6 +37,8 @@ spec:
   selector:
     matchLabels:
       app: influxdb
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -48,3 +50,10 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8086
+        volumeMounts:
+        - mountPath: "/var/lib/influxdb/"
+          name: influxdb-claim
+      volumes:
+      - name: influxdb-claim
+        persistentVolumeClaim:
+          claimName: influxdb-pvc

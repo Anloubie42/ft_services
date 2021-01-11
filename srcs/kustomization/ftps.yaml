@@ -12,8 +12,12 @@ spec:
     app: ftps
   ports:
     - port: 21
-      name: http
+      name: active1-ftp
       targetPort: 21
+      protocol: TCP
+    - port: 20
+      name: active2-ftp
+      targetPort: 20
       protocol: TCP
     - port: 30020
       name : passive0-ftp
@@ -42,6 +46,8 @@ spec:
   selector:
     matchLabels:
       app: ftps
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -52,6 +58,7 @@ spec:
         image: docker-ftps
         imagePullPolicy: Never
         ports:
+        - containerPort: 20
         - containerPort: 21
         - containerPort: 30020
         - containerPort: 30021

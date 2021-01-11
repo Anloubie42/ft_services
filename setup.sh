@@ -18,6 +18,7 @@ start_mode_selected()
 	build
 	kubectl apply -k srcs/kustomization
 	kubectl apply -f srcs/kustomization/rbac.yaml
+	sed s/MINIKUBE_IP/$(minikube ip)/g < ./srcs/telegraf/srcs/telegraf.conf > ./srcs/telegraf/srcs/telegraf_ip.conf
 	minikube dashboard &
 	# minikube start
 }
@@ -36,7 +37,7 @@ delete()
 {
 	if [ "$1" = "nginx" ]
 	then
-		kubectl delete -f ./srcs/kustomization/nginx-deployment.yaml
+		kubectl delete -f ./srcs/kustomization/nginx.yaml
 	elif [ "$1" = "wordpress" ]
 	then
 		kubectl delete -f ./srcs/kustomization/wordpress-deployment.yaml

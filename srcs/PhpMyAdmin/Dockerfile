@@ -15,8 +15,6 @@ RUN apk update && \
 	chmod -R 777 /usr/share/webapps/ && \
 	ln -s /usr/share/webapps/phpmyadmin/ /var/www/localhost/htdocs/phpmyadmin
 
-EXPOSE 5000
-
 ADD ./srcs/init.sh .
 COPY ./srcs/nginx.conf /etc/nginx/conf.d/
 COPY ./srcs/config.inc.php usr/share/webapps/phpmyadmin/

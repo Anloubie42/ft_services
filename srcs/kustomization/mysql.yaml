@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim
+  name: mysql-pvc
   labels:
     app: wordpress
 spec:
@@ -37,6 +37,8 @@ spec:
   selector:
     matchLabels:
       app: mysql
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -48,3 +50,10 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - mountPath: "/var/lib/mysql"
+          name: mysql-claim
+      volumes:
+      - name: mysql-claim
+        persistentVolumeClaim:
+          claimName: mysql-pvc
