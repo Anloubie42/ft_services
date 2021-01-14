@@ -17,7 +17,6 @@ start_mode_selected()
 	minikube addons enable metrics-server
 	build
 	kubectl apply -k srcs/kustomization
-	kubectl apply -f srcs/kustomization/rbac.yaml
 	sed s/MINIKUBE_IP/$(minikube ip)/g < ./srcs/telegraf/srcs/telegraf.conf > ./srcs/telegraf/srcs/telegraf_ip.conf
 	minikube dashboard &
 	# minikube start
@@ -40,7 +39,7 @@ delete()
 		kubectl delete -f ./srcs/kustomization/nginx.yaml
 	elif [ "$1" = "wordpress" ]
 	then
-		kubectl delete -f ./srcs/kustomization/wordpress-deployment.yaml
+		kubectl delete -f ./srcs/kustomization/wordpress.yaml
 	elif [ "$1" = "mysql" ]
 	then
 		kubectl delete -f ./srcs/kustomization/mysql.yaml
