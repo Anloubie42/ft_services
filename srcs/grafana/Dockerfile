@@ -7,8 +7,10 @@ RUN apk update && \
 
 RUN mkdir -p /usr/share/webapps
 
-RUN wget https://dl.grafana.com/oss/release/grafana-7.3.6.linux-amd64.tar.gz && \
-	tar -zxvf grafana-7.3.6.linux-amd64.tar.gz
+COPY ./srcs/grafana-7.3.6.linux-amd64.tar.gz /
+
+# RUN wget https://dl.grafana.com/oss/release/grafana-7.3.6.linux-amd64.tar.gz
+RUN tar -zxvf grafana-7.3.6.linux-amd64.tar.gz
 
 RUN mv grafana-7.3.6 grafana && \
 	mv grafana /usr/share/webapps

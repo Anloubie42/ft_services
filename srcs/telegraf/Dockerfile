@@ -6,8 +6,11 @@ RUN apk update && \
 	apk add sudo && \
 	apk add --no-cache libc6-compat
 
-RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.1_linux_i386.tar.gz && \
-	tar xf telegraf-1.16.1_linux_i386.tar.gz && \
+# RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.1_linux_i386.tar.gz && \
+
+COPY ./srcs/telegraf-1.16.1_linux_i386.tar.gz /
+
+RUN	tar xf telegraf-1.16.1_linux_i386.tar.gz && \
 	mv telegraf-1.16.1 telegraf && \
 	mv telegraf /home
 
