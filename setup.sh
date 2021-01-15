@@ -2,16 +2,32 @@ no_mode_selected()
 {
 	echo "No mode selected, please relaunch scirpt with one of these modes :"
 	echo "- \033[32mStart\033[0m : Start the VM"
-	echo "- \033[32mServices\033[0m : restart all services"
+	echo "- \033[32mStop\033[0m : Stop the VM"
+	echo "- \033[32mUpdate <Service> \033[0m : Delete and restarts the service"
+	echo "- \033[32mMinikube\033[0m : Installs Minikube"
+}
+
+minikube_install()
+{
+	echo "\033[31mInstalling Minikube...\033[0m"
+	curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && \
+	chmod +x minikube && \
+	echo "\033[31mAdding Minikube to PATH...\033[0m"
+	sudo mkdir -p /usr/local/bin && \
+	sudo install minikube /usr/local/bin/
+	echo "\033[31mAdding the user to Docker...\033[0m"
+	sudo usermod -aG docker $USER && newgrp docker
+	echo "\033[31mMinikube ready to be used !\033[0m"
 }
 
 start_mode_selected()
 {
 	echo "\033[31mVirtual Machine Starting\033[0m"
-	# sudo service docker start
+	sudo service docker start
 	# minikube start --driver=docker
 	# minikube start --driver=virtualbox --extra-config kubeadm.ignore-preflight-errors=SystemVerification
 	minikube config set WantUpdateNotification false
+	minikube config set driver docker
 	minikube start
 	minikube addons enable metallb
 	minikube addons enable metrics-server
@@ -24,7 +40,7 @@ start_mode_selected()
 
 stop_mode_selected()
 {
-	# sudo service docker stop
+	sudo service docker stop
 	echo "\033[31mStopping Virtual Machine...\033[0m"
 	minikube stop
 	echo "\033[31mDeleting Virtual Machine...\033[0m"
@@ -73,7 +89,7 @@ build()
 		docker build -t docker-phpmyadmin ./srcs/PhpMyAdmin
 		docker build -t docker-ftps ./srcs/FTPS
 		docker build -t docker-grafana ./srcs/grafana
-		docker build -t docker-influxdb ./srcs/influxdb
+		docker build -t docker-influxdb ./srcs/InfluxDB
 		docker build -t docker-telegraf ./srcs/telegraf
 	elif [ "$1" = "nginx" ]
 	then
@@ -95,7 +111,7 @@ build()
 		docker build -t docker-grafana ./srcs/grafana
 	elif [ "$1" = "influxdb" ]
 	then
-		docker build -t docker-influxdb ./srcs/influxdb
+		docker build -t docker-influxdb ./srcs/InfluxDB
 	elif [ "$1" = "telegraf" ]
 	then
 		docker build -t docker-telegraf ./srcs/telegraf
@@ -116,17 +132,9 @@ then
 elif  [ "$1" = "start" ]
 then
 	start_mode_selected
-elif [ "$1" = "services" ]
+elif [ "$1" = "minikube" ]
 then
-	echo "Working on this part"
-	# echo "\033[31mDeleting all configuration...\033[0m"
-	# kubectl delete all --all
-	# echo "\033[31mBuilding New Image...\033[0m"
-	# docker build -t docker-nginx ./srcs/nginx
-	# echo "\033[31mCreating Services And Deployments...\033[0m"
-	# kubectl apply -f srcs/nginx-service/nginx-service.yaml
-	# kubectl apply -f srcs/nginx/srcs/nginx-deployment.yaml
-	# kubectl apply -f srcs/ingress-test/ingress-service.yaml
+	minikube_install
 elif [ "$1" = "stop" ]
 then
 	stop_mode_selected

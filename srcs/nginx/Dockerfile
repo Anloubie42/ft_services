@@ -34,4 +34,6 @@ COPY ./srcs/proxy_params /etc/nginx/
 RUN	rm /etc/ssh/sshd_config
 COPY ./srcs/sshd_config /etc/ssh/
 
+EXPOSE 80 443 22
+
 CMD sh init.sh
