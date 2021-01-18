@@ -1,4 +1,4 @@
-from alpine:3.12
+ Server is online from alpine:3.12
 
 RUN apk update \
 	&& apk upgrade \
@@ -25,6 +25,9 @@ RUN apk add openrc --no-cache
 RUN	mkdir /run/openrc \
 	&& rc-update add sshd \
 	&& touch /run/openrc/softlevel
+
+#RUN rm /etc/nginx/fastcgi_params
+#COPY ./srcs/fastcgi_params /etc/nginx/fastcgi_params
 
 ADD ./srcs/nginx.conf /etc/nginx/conf.d/
 ADD ./srcs/index.html /var/www/html/

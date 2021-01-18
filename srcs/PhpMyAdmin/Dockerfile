@@ -17,6 +17,11 @@ RUN	mkdir -p /usr/share/webapps/ && \
 RUN	mkdir -p /run/nginx/ && \
 	rm /etc/nginx/conf.d/default.conf
 
+
+#RUN rm /etc/nginx/fastcgi_params
+#COPY ./srcs/fastcgi_params /etc/nginx/
+#COPY ./srcs/fastcgi_params /etc/nginx/conf.d/
+
 ADD ./srcs/init.sh .
 COPY ./srcs/nginx.conf /etc/nginx/conf.d/
 COPY ./srcs/config.inc.php usr/share/webapps/phpmyadmin/
