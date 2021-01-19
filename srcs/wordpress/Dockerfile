@@ -18,7 +18,6 @@ RUN apk update && \
 ADD ./srcs/nginx.conf /etc/nginx/conf.d/
 COPY ./srcs/init.sh /
 COPY ./srcs/wp-config.php /var/www/html/wordpress/
-COPY ./srcs/admin.sql /
 COPY ./srcs/wordpress.sql /
 RUN chmod 777 /wordpress.sql
 

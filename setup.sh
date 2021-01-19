@@ -7,38 +7,87 @@ no_mode_selected()
 	echo "- \033[32mMinikube\033[0m : Installs Minikube"
 }
 
+set_ip()
+{
+	os="$(uname)"
+	if [ "$os" == "Darwin" ]
+	then
+		ip="192.168.99.10"
+	elif [ "$os" == "Linux" ]
+	then
+		ip="172.17.255.10"
+	else
+		echo "\033[31mThere has been a problem\033[0m"
+		exit 1
+	fi
+	sed s/MINIKUBE_IP/$(minikube ip)/g < ./srcs/telegraf/srcs/telegraf.conf > ./srcs/telegraf/srcs/telegraf_ip.conf
+	sed s/OS_IP/"$ip"/g < ./srcs/FTPS/srcs/vsftpd_generic.conf > ./srcs/FTPS/srcs/vsftpd.conf
+	sed s/OS_IP/"$ip"/g < ./srcs/kustomization/metallb-configmap-generic.yaml > ./srcs/kustomization/metallb-configmap.yaml
+	sed s/OS_IP/"$ip"/g < ./srcs/wordpress/srcs/wordpress_generic.sql > ./srcs/wordpress/srcs/wordpress.sql
+}
+
 minikube_install()
 {
+	os="$(uname)"
 	echo "\033[31mInstalling Minikube...\033[0m"
-	curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && \
-	chmod +x minikube && \
-	echo "\033[31mAdding Minikube to PATH...\033[0m"
-	sudo mkdir -p /usr/local/bin && \
-	sudo install minikube /usr/local/bin/
-	echo "\033[31mAdding the user to Docker...\033[0m"
-	sudo usermod -aG docker $USER && newgrp docker
+	if [ "$os" == "Linux" ]
+	then
+		curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+		chmod +x minikube
+		echo "\033[31mAdding Minikube to PATH...\033[0m"
+		sudo mkdir -p /usr/local/bin
+		sudo install minikube /usr/local/bin/
+		echo "\033[31mAdding the user to Docker...\033[0m"
+		sudo usermod -aG docker $USER && newgrp docker
+	elif [ "$os" == "Darwin" ]
+	then
+		curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
+		chmod +x minikube
+		echo "\033[31mAdding Minikube to PATH...\033[0m"
+		mkdir -p /usr/local/bin
+		mv Minikube /usr/local/bin
+	fi
 	echo "\033[31mMinikube ready to be used !\033[0m"
 }
 
 start_mode_selected()
 {
 	echo "\033[31mVirtual Machine Starting\033[0m"
-	# sudo service docker start
 	minikube config set WantUpdateNotification false
-	# minikube config set driver docker
-	minikube config set driver virtualbox
+	os="$(uname)"
+	if [ "$os" == "Linux" ]
+	then
+		sudo service docker start
+		minikube config set driver docker
+	elif [ "$os" == "Darwin" ]
+	then
+		minikube config set driver virtualbox
+	else
+		echo "\033[31mThere has been a problem\033[0m"
+		exit 1
+	fi
 	minikube start
 	minikube addons enable metallb
 	minikube addons enable metrics-server
+	set_ip
 	build
 	kubectl apply -k srcs/kustomization
-	sed s/MINIKUBE_IP/$(minikube ip)/g < ./srcs/telegraf/srcs/telegraf.conf > ./srcs/telegraf/srcs/telegraf_ip.conf
 	minikube dashboard &
 }
 
 stop_mode_selected()
 {
-	# sudo service docker stop
+	os="$(uname)"
+	if [ "$os" == "Linux" ]
+	then
+		sudo service docker stop
+	elif [ "$os" == "Darwin" ]
+	then
+		:
+	else
+		echo "\033[31mThere has been a problem\033[0m"
+		exit 1
+	fi
 	echo "\033[31mStopping Virtual Machine...\033[0m"
 	minikube stop
 	echo "\033[31mDeleting Virtual Machine...\033[0m"
@@ -127,7 +176,7 @@ clear
 if [ -z "$1" ]
 then
 	no_mode_selected
-elif  [ "$1" = "start" ]
+elif [ "$1" = "start" ]
 then
 	start_mode_selected
 elif [ "$1" = "minikube" ]
