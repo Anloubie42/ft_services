@@ -1,0 +1,1 @@
+alias log='cat /var/log/nginx/error.log'

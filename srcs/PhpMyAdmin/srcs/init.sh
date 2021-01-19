@@ -1,3 +1,4 @@
+source /.bashrc
 php-fpm7
 nginx
 mysql -h mysql --user=wproot --password=wppassword

@@ -23,11 +23,10 @@ minikube_install()
 start_mode_selected()
 {
 	echo "\033[31mVirtual Machine Starting\033[0m"
-	sudo service docker start
-	# minikube start --driver=docker
-	# minikube start --driver=virtualbox --extra-config kubeadm.ignore-preflight-errors=SystemVerification
+	# sudo service docker start
 	minikube config set WantUpdateNotification false
-	minikube config set driver docker
+	# minikube config set driver docker
+	minikube config set driver virtualbox
 	minikube start
 	minikube addons enable metallb
 	minikube addons enable metrics-server
@@ -35,12 +34,11 @@ start_mode_selected()
 	kubectl apply -k srcs/kustomization
 	sed s/MINIKUBE_IP/$(minikube ip)/g < ./srcs/telegraf/srcs/telegraf.conf > ./srcs/telegraf/srcs/telegraf_ip.conf
 	minikube dashboard &
-	# minikube start
 }
 
 stop_mode_selected()
 {
-	sudo service docker stop
+	# sudo service docker stop
 	echo "\033[31mStopping Virtual Machine...\033[0m"
 	minikube stop
 	echo "\033[31mDeleting Virtual Machine...\033[0m"
