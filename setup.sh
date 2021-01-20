@@ -10,10 +10,10 @@ no_mode_selected()
 set_ip()
 {
 	os="$(uname)"
-	if [ "$os" == "Darwin" ]
+	if [ "$os" = "Darwin" ]
 	then
 		ip="192.168.99.10"
-	elif [ "$os" == "Linux" ]
+	elif [ "$os" = "Linux" ]
 	then
 		ip="172.17.255.10"
 	else
@@ -30,7 +30,7 @@ minikube_install()
 {
 	os="$(uname)"
 	echo "\033[31mInstalling Minikube...\033[0m"
-	if [ "$os" == "Linux" ]
+	if [ "$os" = "Linux" ]
 	then
 		curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 		chmod +x minikube
@@ -39,7 +39,7 @@ minikube_install()
 		sudo install minikube /usr/local/bin/
 		echo "\033[31mAdding the user to Docker...\033[0m"
 		sudo usermod -aG docker $USER && newgrp docker
-	elif [ "$os" == "Darwin" ]
+	elif [ "$os" = "Darwin" ]
 	then
 		curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
 		chmod +x minikube
@@ -55,11 +55,11 @@ start_mode_selected()
 	echo "\033[31mVirtual Machine Starting\033[0m"
 	minikube config set WantUpdateNotification false
 	os="$(uname)"
-	if [ "$os" == "Linux" ]
+	if [ "$os" = "Linux" ]
 	then
 		sudo service docker start
 		minikube config set driver docker
-	elif [ "$os" == "Darwin" ]
+	elif [ "$os" = "Darwin" ]
 	then
 		minikube config set driver virtualbox
 	else
@@ -77,11 +77,12 @@ start_mode_selected()
 
 stop_mode_selected()
 {
+	kubectl delete -k ./srcs/kustomization/
 	os="$(uname)"
-	if [ "$os" == "Linux" ]
+	if [ "$os" = "Linux" ]
 	then
 		sudo service docker stop
-	elif [ "$os" == "Darwin" ]
+	elif [ "$os" = "Darwin" ]
 	then
 		:
 	else
